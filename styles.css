@@ -1,14 +1,15 @@
 :root {
-  --ink: #18202f;
-  --muted: #687085;
-  --line: rgba(24, 32, 47, 0.12);
-  --field: rgba(255, 255, 255, 0.82);
+  --ink: #161426;
+  --muted: #6d6681;
+  --line: rgba(22, 20, 38, 0.14);
+  --field: rgba(255, 255, 255, 0.88);
   --white: #ffffff;
-  --coral: #f06f5b;
-  --teal: #148a8a;
-  --gold: #e2ad46;
-  --danger: #c94d3f;
-  --shadow: 0 24px 70px rgba(16, 24, 40, 0.2);
+  --coral: #ff5f7e;
+  --teal: #16d9d4;
+  --gold: #ffd166;
+  --violet: #6722d6;
+  --danger: #d83d5f;
+  --shadow: 0 28px 80px rgba(14, 7, 34, 0.34);
 }
 
 * {
@@ -25,23 +26,23 @@ body {
   font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
   color: var(--ink);
   background:
-    linear-gradient(135deg, rgba(20, 138, 138, 0.18), transparent 32%),
-    linear-gradient(315deg, rgba(240, 111, 91, 0.22), transparent 34%),
-    #f7f2ec;
+    radial-gradient(circle at 15% 12%, rgba(255, 95, 126, 0.35), transparent 30%),
+    radial-gradient(circle at 86% 18%, rgba(22, 217, 212, 0.28), transparent 28%),
+    linear-gradient(135deg, #10081f 0%, #23104f 44%, #081c2f 100%);
   display: grid;
   place-items: center;
   padding: 28px;
 }
 
 .login-shell {
-  width: min(1080px, 100%);
+  width: min(1140px, 100%);
   min-height: 680px;
   display: grid;
   grid-template-columns: 1.05fr 0.95fr;
   overflow: hidden;
-  border: 1px solid rgba(255, 255, 255, 0.68);
-  border-radius: 28px;
-  background: rgba(255, 255, 255, 0.46);
+  border: 1px solid rgba(255, 255, 255, 0.18);
+  border-radius: 24px;
+  background: rgba(255, 255, 255, 0.12);
   box-shadow: var(--shadow);
   backdrop-filter: blur(22px);
 }
@@ -53,10 +54,10 @@ body {
   justify-content: space-between;
   padding: 44px;
   overflow: hidden;
-  color: #fffaf5;
+  color: #fff7fb;
   background:
-    linear-gradient(145deg, rgba(18, 54, 62, 0.92), rgba(13, 111, 111, 0.78)),
-    url("https://images.unsplash.com/photo-1497366754035-f200968a6e72?auto=format&fit=crop&w=1200&q=80") center/cover;
+    linear-gradient(180deg, rgba(11, 8, 31, 0.34), rgba(11, 8, 31, 0.9)),
+    url("https://images.unsplash.com/photo-1511512578047-dfb367046420?auto=format&fit=crop&w=1200&q=80") center/cover;
   isolation: isolate;
 }
 
@@ -66,8 +67,26 @@ body {
   inset: 0;
   z-index: -1;
   background:
-    radial-gradient(circle at 18% 16%, rgba(226, 173, 70, 0.42), transparent 22%),
-    linear-gradient(180deg, transparent, rgba(9, 18, 27, 0.48));
+    linear-gradient(rgba(255, 255, 255, 0.035) 1px, transparent 1px) 0 0 / 100% 7px,
+    radial-gradient(circle at 74% 18%, rgba(255, 209, 102, 0.5), transparent 18%),
+    radial-gradient(circle at 38% 42%, rgba(255, 95, 126, 0.34), transparent 26%),
+    linear-gradient(180deg, transparent, rgba(4, 7, 21, 0.66));
+}
+
+.showcase::after {
+  content: "";
+  position: absolute;
+  right: -26%;
+  bottom: 20%;
+  z-index: -1;
+  width: 82%;
+  height: 34%;
+  background:
+    linear-gradient(90deg, transparent, rgba(255, 95, 126, 0.58), transparent),
+    repeating-linear-gradient(0deg, rgba(22, 217, 212, 0.34) 0 2px, transparent 2px 18px);
+  opacity: 0.7;
+  transform: perspective(360px) rotateX(62deg) rotateZ(-8deg);
+  transform-origin: center bottom;
 }
 
 .brand {
@@ -75,7 +94,9 @@ body {
   align-items: center;
   gap: 12px;
   font-weight: 800;
+  text-transform: uppercase;
   letter-spacing: 0;
+  text-shadow: 0 0 22px rgba(22, 217, 212, 0.5);
 }
 
 .brand-mark {
@@ -83,10 +104,10 @@ body {
   height: 42px;
   display: grid;
   place-items: center;
-  border-radius: 14px;
-  color: #12363e;
-  background: #fffaf5;
-  box-shadow: 0 12px 30px rgba(0, 0, 0, 0.18);
+  border-radius: 12px;
+  color: #11081f;
+  background: linear-gradient(135deg, var(--teal), var(--gold) 52%, var(--coral));
+  box-shadow: 0 0 28px rgba(22, 217, 212, 0.44);
 }
 
 .brand-mark svg,
@@ -103,7 +124,8 @@ body {
 }
 
 .showcase-content {
-  max-width: 500px;
+  max-width: 520px;
+  margin-top: auto;
 }
 
 .eyebrow {
@@ -111,12 +133,13 @@ body {
   width: fit-content;
   margin: 0 0 18px;
   padding: 8px 12px;
-  border: 1px solid rgba(255, 255, 255, 0.24);
+  border: 1px solid rgba(22, 217, 212, 0.42);
   border-radius: 999px;
-  color: rgba(255, 250, 245, 0.86);
-  background: rgba(255, 255, 255, 0.12);
+  color: #fef7ff;
+  background: rgba(17, 8, 31, 0.52);
   font-size: 0.82rem;
   font-weight: 700;
+  text-transform: uppercase;
 }
 
 .eyebrow.dark {
@@ -127,18 +150,83 @@ body {
 
 h1 {
   margin: 0;
-  max-width: 11ch;
-  font-size: clamp(3rem, 7vw, 5.9rem);
-  line-height: 0.9;
+  max-width: 9ch;
+  font-size: 5.2rem;
+  line-height: 0.92;
   letter-spacing: 0;
+  text-shadow:
+    0 0 16px rgba(255, 95, 126, 0.85),
+    0 0 42px rgba(103, 34, 214, 0.82);
 }
 
 .showcase p {
   max-width: 430px;
   margin: 24px 0 0;
-  color: rgba(255, 250, 245, 0.82);
+  color: rgba(255, 247, 251, 0.82);
   font-size: 1.05rem;
   line-height: 1.7;
+}
+
+.retro-stack {
+  position: relative;
+  height: 210px;
+  margin: 22px 0 26px;
+}
+
+.photo-card {
+  position: absolute;
+  display: block;
+  overflow: hidden;
+  border: 4px solid rgba(255, 247, 251, 0.86);
+  border-radius: 8px;
+  background-position: center;
+  background-size: cover;
+  box-shadow:
+    0 18px 38px rgba(0, 0, 0, 0.34),
+    0 0 34px rgba(255, 95, 126, 0.22);
+}
+
+.photo-card::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background:
+    linear-gradient(180deg, transparent, rgba(8, 9, 31, 0.24)),
+    linear-gradient(rgba(255, 255, 255, 0.08) 1px, transparent 1px) 0 0 / 100% 6px;
+  mix-blend-mode: screen;
+}
+
+.photo-arcade {
+  left: 0;
+  top: 14px;
+  width: 52%;
+  height: 162px;
+  background-image:
+    linear-gradient(135deg, rgba(22, 217, 212, 0.2), rgba(255, 95, 126, 0.24)),
+    url("https://images.unsplash.com/photo-1511512578047-dfb367046420?auto=format&fit=crop&w=800&q=80");
+  transform: rotate(-5deg);
+}
+
+.photo-rock {
+  right: 4%;
+  top: 0;
+  width: 44%;
+  height: 138px;
+  background-image:
+    linear-gradient(135deg, rgba(255, 209, 102, 0.2), rgba(103, 34, 214, 0.24)),
+    url("https://images.unsplash.com/photo-1493225457124-a3eb161ffa5f?auto=format&fit=crop&w=800&q=80");
+  transform: rotate(6deg);
+}
+
+.photo-cassette {
+  right: 18%;
+  bottom: 0;
+  width: 42%;
+  height: 104px;
+  background-image:
+    linear-gradient(135deg, rgba(255, 95, 126, 0.18), rgba(22, 217, 212, 0.2)),
+    url("https://images.unsplash.com/photo-1516280440614-37939bbacd81?auto=format&fit=crop&w=800&q=80");
+  transform: rotate(-2deg);
 }
 
 .metrics {
@@ -151,11 +239,11 @@ h1 {
 .metric {
   min-height: 86px;
   padding: 16px;
-  border: 1px solid rgba(255, 255, 255, 0.18);
-  border-radius: 18px;
-  color: #fffaf5;
+  border: 1px solid rgba(22, 217, 212, 0.2);
+  border-radius: 8px;
+  color: #fff7fb;
   text-align: left;
-  background: rgba(255, 255, 255, 0.12);
+  background: rgba(13, 9, 39, 0.54);
   cursor: pointer;
   transition: transform 180ms ease, background 180ms ease, border-color 180ms ease;
 }
@@ -164,18 +252,20 @@ h1 {
 .metric.is-active {
   transform: translateY(-3px);
   border-color: rgba(255, 255, 255, 0.42);
-  background: rgba(255, 255, 255, 0.22);
+  background: rgba(255, 95, 126, 0.2);
+  box-shadow: 0 0 24px rgba(22, 217, 212, 0.16);
 }
 
 .metric strong {
   display: block;
   font-size: 1.25rem;
+  color: var(--gold);
 }
 
 .metric span {
   display: block;
   margin-top: 5px;
-  color: rgba(255, 250, 245, 0.78);
+  color: rgba(255, 247, 251, 0.78);
   font-size: 0.82rem;
   line-height: 1.35;
 }
@@ -185,7 +275,7 @@ h1 {
   align-content: center;
   padding: 44px;
   background:
-    linear-gradient(180deg, rgba(255, 255, 255, 0.76), rgba(255, 255, 255, 0.54));
+    linear-gradient(180deg, rgba(255, 255, 255, 0.94), rgba(244, 241, 255, 0.88));
 }
 
 .login-card,
@@ -202,7 +292,7 @@ h1 {
 .login-card h2,
 .success-card h2 {
   margin: 0;
-  font-size: clamp(2rem, 4vw, 2.8rem);
+  font-size: 2.5rem;
   line-height: 1.02;
   letter-spacing: 0;
 }
@@ -259,11 +349,11 @@ input::placeholder {
 input:focus {
   border-color: rgba(20, 138, 138, 0.72);
   background: var(--white);
-  box-shadow: 0 0 0 5px rgba(20, 138, 138, 0.13);
+  box-shadow: 0 0 0 5px rgba(22, 217, 212, 0.16);
 }
 
 input.is-valid {
-  border-color: rgba(20, 138, 138, 0.58);
+  border-color: rgba(22, 217, 212, 0.62);
 }
 
 input.is-invalid {
@@ -289,7 +379,7 @@ input.is-invalid {
 
 .password-toggle:hover {
   color: var(--teal);
-  background: rgba(20, 138, 138, 0.09);
+  background: rgba(22, 217, 212, 0.1);
 }
 
 .field-message {
@@ -379,18 +469,18 @@ a:hover,
   min-height: 40px;
   margin-left: 8px;
   padding: 0 16px;
-  border: 1px solid rgba(20, 138, 138, 0.24);
-  border-radius: 13px;
-  color: #fffaf5;
-  background: var(--teal);
-  box-shadow: 0 10px 22px rgba(20, 138, 138, 0.18);
+  border: 1px solid rgba(22, 217, 212, 0.3);
+  border-radius: 8px;
+  color: #11081f;
+  background: linear-gradient(135deg, var(--teal), var(--gold));
+  box-shadow: 0 10px 22px rgba(22, 217, 212, 0.2);
   text-decoration: none;
   transition: transform 180ms ease, box-shadow 180ms ease, background 180ms ease;
 }
 
 .auth-link:hover {
-  background: #12363e;
-  box-shadow: 0 14px 28px rgba(20, 138, 138, 0.24);
+  background: linear-gradient(135deg, var(--gold), var(--coral));
+  box-shadow: 0 14px 28px rgba(255, 95, 126, 0.24);
   text-decoration: none;
   transform: translateY(-1px);
 }
@@ -399,19 +489,19 @@ a:hover,
   position: relative;
   height: 58px;
   border: 0;
-  border-radius: 16px;
-  color: #fffaf5;
-  background: linear-gradient(135deg, var(--teal), #12363e 62%, var(--coral));
+  border-radius: 8px;
+  color: #fff7fb;
+  background: linear-gradient(135deg, #16d9d4, #6722d6 58%, #ff5f7e);
   font: inherit;
   font-weight: 850;
   cursor: pointer;
-  box-shadow: 0 16px 34px rgba(20, 138, 138, 0.28);
+  box-shadow: 0 16px 34px rgba(103, 34, 214, 0.3);
   transition: transform 180ms ease, box-shadow 180ms ease, opacity 180ms ease;
 }
 
 .submit:hover {
   transform: translateY(-2px);
-  box-shadow: 0 20px 38px rgba(20, 138, 138, 0.34);
+  box-shadow: 0 20px 38px rgba(255, 95, 126, 0.3);
 }
 
 .submit.is-loading {
@@ -469,7 +559,7 @@ a:hover,
 .social {
   height: 52px;
   border: 1px solid var(--line);
-  border-radius: 15px;
+  border-radius: 8px;
   color: var(--ink);
   background: rgba(255, 255, 255, 0.62);
   font: inherit;
@@ -478,7 +568,7 @@ a:hover,
 }
 
 .social:hover {
-  border-color: rgba(20, 138, 138, 0.4);
+  border-color: rgba(103, 34, 214, 0.36);
   background: #fff;
 }
 
@@ -530,10 +620,10 @@ a:hover,
   display: grid;
   place-items: center;
   margin: 0 auto 18px;
-  border-radius: 24px;
-  color: #fffaf5;
-  background: var(--teal);
-  box-shadow: 0 18px 36px rgba(20, 138, 138, 0.26);
+  border-radius: 18px;
+  color: #fff7fb;
+  background: linear-gradient(135deg, var(--teal), var(--violet), var(--coral));
+  box-shadow: 0 18px 36px rgba(103, 34, 214, 0.28);
 }
 
 .success-icon svg {
@@ -592,8 +682,16 @@ a:hover,
   }
 
   .showcase {
-    min-height: 390px;
+    min-height: 620px;
     padding: 30px;
+  }
+
+  h1 {
+    font-size: 4rem;
+  }
+
+  .retro-stack {
+    height: 190px;
   }
 
   .metrics {
@@ -612,7 +710,7 @@ a:hover,
 @media (max-width: 520px) {
   body {
     padding: 0;
-    background: #f7f2ec;
+    background: #10081f;
   }
 
   .login-shell {
@@ -622,12 +720,42 @@ a:hover,
   }
 
   .showcase {
-    min-height: 320px;
+    min-height: 650px;
     padding: 24px;
+  }
+
+  h1 {
+    font-size: 3rem;
+  }
+
+  .login-card h2,
+  .success-card h2 {
+    font-size: 2rem;
   }
 
   .showcase p {
     font-size: 0.96rem;
+  }
+
+  .retro-stack {
+    height: 166px;
+    margin: 18px 0 22px;
+  }
+
+  .photo-arcade {
+    width: 58%;
+    height: 130px;
+  }
+
+  .photo-rock {
+    width: 46%;
+    height: 112px;
+  }
+
+  .photo-cassette {
+    right: 12%;
+    width: 48%;
+    height: 88px;
   }
 
   .panel {
