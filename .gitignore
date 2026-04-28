@@ -1,0 +1,6 @@
+node_modules/
+npm-debug.log*
+.server-test.log
+.server-test.err
+.DS_Store
+Thumbs.db

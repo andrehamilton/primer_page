@@ -1,0 +1,153 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Inicio de sesion</title>
+  <link rel="stylesheet" href="styles.css">
+  <script defer src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <script defer src="supabase-config.js?v=2"></script>
+  <script defer src="script.js?v=2"></script>
+</head>
+<body data-auth-mode="login">
+  <main class="login-shell" aria-label="Inicio de sesion">
+    <section class="showcase" aria-label="Presentacion">
+      <div class="brand">
+        <span class="brand-mark" aria-hidden="true">
+          <svg viewBox="0 0 24 24">
+            <path d="M12 3l8 4.5v9L12 21l-8-4.5v-9L12 3z"></path>
+            <path d="M12 8v8"></path>
+            <path d="M8.5 10.2l3.5 2 3.5-2"></path>
+          </svg>
+        </span>
+        NovaData
+      </div>
+
+      <div class="showcase-content">
+        <p class="eyebrow">Panel privado</p>
+        <h1>Bienvenido de vuelta</h1>
+        <p id="welcomeText">Accede a tu espacio de trabajo con una experiencia clara, rapida y pensada para mantener tu informacion bajo control.</p>
+      </div>
+
+      <div class="metrics" aria-label="Indicadores">
+        <button class="metric is-active" type="button" data-tip="Tus datos quedan protegidos desde el primer paso.">
+          <strong>24/7</strong>
+          <span>Acceso seguro</span>
+        </button>
+        <button class="metric" type="button" data-tip="La interfaz responde a lo que escribes en tiempo real.">
+          <strong>98%</strong>
+          <span>Flujo optimizado</span>
+        </button>
+        <button class="metric" type="button" data-tip="Completa el formulario y veras tu bienvenida personalizada.">
+          <strong>1 min</strong>
+          <span>Para empezar</span>
+        </button>
+      </div>
+    </section>
+
+    <section class="panel">
+      <div class="login-card" id="loginCard">
+        <header>
+          <h2 id="formTitle">Iniciar sesion</h2>
+          <p id="formSubtitle">Ingresa tus credenciales para continuar con tu cuenta.</p>
+        </header>
+
+        <form id="loginForm" novalidate>
+          <label id="nameField" hidden>
+            Nombre
+            <span class="input-wrap">
+              <span class="input-icon" aria-hidden="true">
+                <svg viewBox="0 0 24 24">
+                  <path d="M20 21a8 8 0 0 0-16 0"></path>
+                  <circle cx="12" cy="7" r="4"></circle>
+                </svg>
+              </span>
+              <input id="fullName" type="text" name="fullName" placeholder="Tu nombre" autocomplete="name">
+            </span>
+            <span class="field-message" id="nameMessage"></span>
+          </label>
+
+          <label>
+            Correo electronico
+            <span class="input-wrap">
+              <span class="input-icon" aria-hidden="true">
+                <svg viewBox="0 0 24 24">
+                  <path d="M4 6h16v12H4z"></path>
+                  <path d="M4 7l8 6 8-6"></path>
+                </svg>
+              </span>
+              <input id="email" type="email" name="email" placeholder="tu@email.com" autocomplete="email" required>
+            </span>
+            <span class="field-message" id="emailMessage"></span>
+          </label>
+
+          <label>
+            Contrasena
+            <span class="input-wrap">
+              <span class="input-icon" aria-hidden="true">
+                <svg viewBox="0 0 24 24">
+                  <rect x="5" y="10" width="14" height="10" rx="2"></rect>
+                  <path d="M8 10V7a4 4 0 0 1 8 0v3"></path>
+                </svg>
+              </span>
+              <input id="password" type="password" name="password" placeholder="Ingresa tu contrasena" autocomplete="current-password" required minlength="6">
+              <button class="password-toggle" type="button" aria-label="Mostrar contrasena" title="Mostrar contrasena">
+                <svg viewBox="0 0 24 24">
+                  <path d="M2 12s3.6-6 10-6 10 6 10 6-3.6 6-10 6-10-6-10-6z"></path>
+                  <circle cx="12" cy="12" r="3"></circle>
+                </svg>
+              </button>
+            </span>
+            <span class="field-message" id="passwordMessage"></span>
+          </label>
+
+          <div class="strength" aria-label="Fortaleza de contrasena">
+            <span class="strength-bar"></span>
+            <span class="strength-bar"></span>
+            <span class="strength-bar"></span>
+            <small id="strengthText">Escribe una contrasena</small>
+          </div>
+
+          <div class="form-row">
+            <label class="check">
+              <input id="remember" type="checkbox" name="remember">
+              Recordarme
+            </label>
+            <button class="link-button" type="button" id="forgotButton">Olvide mi contrasena</button>
+          </div>
+
+          <button class="submit" id="submitButton" type="submit">
+            <span class="button-text" id="submitText">Entrar al panel</span>
+            <span class="button-loader" aria-hidden="true"></span>
+          </button>
+          <p class="message" id="message" aria-live="polite"></p>
+          <p class="config-alert" id="configNotice" hidden>Conecta tus claves de Supabase en supabase-config.js para registrar usuarios reales.</p>
+
+          <div class="divider">o continua con</div>
+
+          <div class="social-grid">
+            <button class="social" type="button" data-provider="Google">Google</button>
+            <button class="social" type="button" data-provider="Microsoft">Microsoft</button>
+          </div>
+
+          <p class="signup"><span id="modeQuestion">No tienes cuenta?</span> <a class="auth-link" href="registro.html" id="createButton">Crear cuenta</a></p>
+        </form>
+      </div>
+
+      <div class="success-card" id="successCard" hidden>
+        <span class="success-icon" aria-hidden="true">
+          <svg viewBox="0 0 24 24">
+            <path d="M20 6L9 17l-5-5"></path>
+          </svg>
+        </span>
+        <p class="eyebrow dark">Sesion iniciada</p>
+        <h2 id="successTitle">Hola de nuevo</h2>
+        <p id="successText">Tu panel esta listo. Esta pantalla simula una entrada correcta para mostrar la interaccion completa.</p>
+        <button class="submit" type="button" id="logoutButton">Volver al login</button>
+      </div>
+    </section>
+  </main>
+
+  <div class="toast" id="toast" role="status" aria-live="polite"></div>
+</body>
+</html>
