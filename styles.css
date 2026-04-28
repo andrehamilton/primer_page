@@ -99,18 +99,6 @@ body {
   text-shadow: 0 0 22px rgba(22, 217, 212, 0.5);
 }
 
-.brand-mark {
-  width: 42px;
-  height: 42px;
-  display: grid;
-  place-items: center;
-  border-radius: 12px;
-  color: #11081f;
-  background: linear-gradient(135deg, var(--teal), var(--gold) 52%, var(--coral));
-  box-shadow: 0 0 28px rgba(22, 217, 212, 0.44);
-}
-
-.brand-mark svg,
 .input-icon svg,
 .password-toggle svg,
 .success-icon svg {
