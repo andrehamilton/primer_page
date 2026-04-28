@@ -20,7 +20,7 @@ const contentTypes = {
 function createServer() {
   return http.createServer((req, res) => {
     const urlPath = decodeURIComponent(req.url.split("?")[0]);
-    const requestedPath = urlPath === "/" ? "/main.html" : urlPath;
+    const requestedPath = urlPath === "/" ? "/index.html" : urlPath;
     const filePath = path.normalize(path.join(root, requestedPath));
 
     if (!filePath.startsWith(root)) {
