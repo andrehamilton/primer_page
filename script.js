@@ -28,6 +28,12 @@ const nameField = document.querySelector("#nameField");
 const configNotice = document.querySelector("#configNotice");
 const metrics = document.querySelectorAll(".metric");
 const socialButtons = document.querySelectorAll(".social");
+const postForm = document.querySelector("#postForm");
+const postText = document.querySelector("#postText");
+const postCounter = document.querySelector("#postCounter");
+const feed = document.querySelector("#feed");
+const profileAvatar = document.querySelector("#profileAvatar");
+const quickActions = document.querySelectorAll(".quick-actions button");
 
 const config = window.supabaseConfig || {};
 const supabaseKey = config.publishableKey || config.anonKey || "";
@@ -49,6 +55,8 @@ if (!hasSupabaseKeys || !window.supabase) {
 }
 
 const savedEmail = localStorage.getItem("novadataEmail");
+let currentUser = "";
+let posts = loadPosts();
 
 if (savedEmail) {
   email.value = savedEmail;
@@ -104,6 +112,49 @@ socialButtons.forEach((button) => {
   });
 });
 
+if (postText) {
+  postText.addEventListener("input", updatePostCounter);
+}
+
+if (postForm) {
+  postForm.addEventListener("submit", (event) => {
+    event.preventDefault();
+    createPost(postText.value);
+  });
+}
+
+quickActions.forEach((button) => {
+  button.addEventListener("click", () => {
+    postText.value = button.dataset.prompt;
+    updatePostCounter();
+    postText.focus();
+  });
+});
+
+if (feed) {
+  feed.addEventListener("click", (event) => {
+    const button = event.target.closest("button");
+    if (!button) return;
+
+    const postCard = button.closest(".post-card");
+    if (!postCard) return;
+
+    if (button.dataset.action === "like") {
+      toggleLike(postCard.dataset.postId);
+    }
+  });
+
+  feed.addEventListener("submit", (event) => {
+    const commentForm = event.target.closest(".comment-form");
+    if (!commentForm) return;
+
+    event.preventDefault();
+    const input = commentForm.querySelector("input");
+    addComment(commentForm.dataset.postId, input.value);
+    input.value = "";
+  });
+}
+
 forgotButton.addEventListener("click", async () => {
   const value = email.value.trim();
 
@@ -142,8 +193,14 @@ form.addEventListener("submit", async (event) => {
   }
 
   if (!hasSupabaseKeys) {
-    setMessage("Falta completar o cargar la conexion de Supabase.", true);
-    showToast("Pega tu URL y anon key de Supabase para guardar usuarios reales.");
+    if (remember.checked) {
+      localStorage.setItem("novadataEmail", email.value.trim());
+    } else {
+      localStorage.removeItem("novadataEmail");
+    }
+
+    setMessage("Modo demo activo. Conecta Supabase para guardar usuarios reales.", false);
+    showSuccess(mode === "register");
     return;
   }
 
@@ -181,6 +238,7 @@ logoutButton.addEventListener("click", async () => {
 
   successCard.hidden = true;
   loginCard.hidden = false;
+  currentUser = "";
   password.value = "";
   updateStrength();
   setMessage("Cerraste la sesion.", false);
@@ -316,15 +374,239 @@ function updateWelcome() {
 }
 
 function showSuccess(wasRegister) {
-  const name = email.value.trim().split("@")[0];
-
-  loginCard.hidden = true;
-  successCard.hidden = false;
-  successTitle.textContent = `Hola, ${capitalize(name)}`;
-  successText.textContent = wasRegister
-    ? "Tu usuario fue creado en Supabase y la sesion quedo iniciada."
-    : "Tu sesion fue verificada correctamente con Supabase.";
+  currentUser = getDisplayName();
+  localStorage.setItem("retrodataCurrentUser", JSON.stringify({
+    name: currentUser,
+    email: email.value.trim(),
+    initials: getInitials(currentUser),
+    mode,
+    joinedAt: new Date().toISOString()
+  }));
   showToast(wasRegister ? "Usuario registrado correctamente." : "Sesion iniciada correctamente.");
+  window.setTimeout(() => {
+    window.location.href = "home.html";
+  }, 500);
+}
+
+function createPost(text) {
+  const content = text.trim();
+
+  if (!content) {
+    showToast("Escribe algo antes de publicar.");
+    postText.focus();
+    return;
+  }
+
+  posts.unshift({
+    id: createId(),
+    author: currentUser || getDisplayName(),
+    content,
+    createdAt: new Date().toISOString(),
+    likes: 0,
+    likedByMe: false,
+    comments: []
+  });
+
+  savePosts();
+  postText.value = "";
+  updatePostCounter();
+  renderFeed();
+  showToast("Publicacion creada.");
+}
+
+function toggleLike(postId) {
+  posts = posts.map((post) => {
+    if (post.id !== postId) return post;
+
+    const likedByMe = !post.likedByMe;
+    return {
+      ...post,
+      likedByMe,
+      likes: Math.max(0, post.likes + (likedByMe ? 1 : -1))
+    };
+  });
+
+  savePosts();
+  renderFeed();
+}
+
+function addComment(postId, text) {
+  const content = text.trim();
+
+  if (!content) {
+    showToast("Escribe un comentario.");
+    return;
+  }
+
+  posts = posts.map((post) => {
+    if (post.id !== postId) return post;
+
+    return {
+      ...post,
+      comments: [
+        ...post.comments,
+        {
+          id: createId(),
+          author: currentUser || getDisplayName(),
+          content,
+          createdAt: new Date().toISOString()
+        }
+      ]
+    };
+  });
+
+  savePosts();
+  renderFeed();
+  showToast("Comentario publicado.");
+}
+
+function renderFeed() {
+  if (!feed) return;
+
+  feed.replaceChildren();
+
+  if (posts.length === 0) {
+    const empty = document.createElement("article");
+    empty.className = "empty-feed";
+    empty.textContent = "Tu muro esta listo. Publica algo para empezar la conversacion.";
+    feed.append(empty);
+    return;
+  }
+
+  posts.forEach((post) => {
+    feed.append(createPostCard(post));
+  });
+}
+
+function createPostCard(post) {
+  const card = document.createElement("article");
+  card.className = "post-card";
+  card.dataset.postId = post.id;
+
+  const header = document.createElement("header");
+  header.className = "post-header";
+
+  const avatar = document.createElement("span");
+  avatar.className = "avatar small-avatar";
+  avatar.textContent = getInitials(post.author);
+
+  const authorWrap = document.createElement("div");
+  const author = document.createElement("strong");
+  author.textContent = post.author;
+  const time = document.createElement("span");
+  time.textContent = formatTime(post.createdAt);
+  authorWrap.append(author, time);
+  header.append(avatar, authorWrap);
+
+  const body = document.createElement("p");
+  body.className = "post-content";
+  body.textContent = post.content;
+
+  const stats = document.createElement("div");
+  stats.className = "post-stats";
+  stats.textContent = `${post.likes} me gusta - ${post.comments.length} comentarios`;
+
+  const actions = document.createElement("div");
+  actions.className = "post-actions";
+
+  const likeButton = document.createElement("button");
+  likeButton.type = "button";
+  likeButton.dataset.action = "like";
+  likeButton.className = post.likedByMe ? "is-liked" : "";
+  likeButton.textContent = post.likedByMe ? "Te gusta" : "Me gusta";
+
+  const commentLabel = document.createElement("span");
+  commentLabel.textContent = "Comentar";
+  actions.append(likeButton, commentLabel);
+
+  const comments = document.createElement("div");
+  comments.className = "comments";
+  post.comments.forEach((comment) => comments.append(createComment(comment)));
+
+  const commentForm = document.createElement("form");
+  commentForm.className = "comment-form";
+  commentForm.dataset.postId = post.id;
+
+  const input = document.createElement("input");
+  input.type = "text";
+  input.placeholder = "Escribe un comentario";
+  input.maxLength = 160;
+
+  const button = document.createElement("button");
+  button.type = "submit";
+  button.textContent = "Enviar";
+  commentForm.append(input, button);
+
+  card.append(header, body, stats, actions, comments, commentForm);
+  return card;
+}
+
+function createComment(comment) {
+  const item = document.createElement("div");
+  item.className = "comment";
+
+  const author = document.createElement("strong");
+  author.textContent = comment.author;
+
+  const content = document.createElement("span");
+  content.textContent = comment.content;
+
+  item.append(author, content);
+  return item;
+}
+
+function loadPosts() {
+  try {
+    const savedPosts = JSON.parse(localStorage.getItem("retrodataPosts") || "[]");
+    return Array.isArray(savedPosts) ? savedPosts : [];
+  } catch {
+    return [];
+  }
+}
+
+function savePosts() {
+  localStorage.setItem("retrodataPosts", JSON.stringify(posts));
+}
+
+function createId() {
+  return window.crypto && window.crypto.randomUUID ? window.crypto.randomUUID() : String(Date.now());
+}
+
+function updateAvatar() {
+  if (!profileAvatar) return;
+  profileAvatar.textContent = getInitials(currentUser || getDisplayName());
+}
+
+function updatePostCounter() {
+  if (!postText || !postCounter) return;
+  postCounter.textContent = `${postText.value.length}/280`;
+}
+
+function getDisplayName() {
+  const name = fullName.value.trim();
+  if (name) return name;
+
+  const value = email.value.trim();
+  return value.includes("@") ? capitalize(value.split("@")[0]) : "Retro Usuario";
+}
+
+function getInitials(value) {
+  return value
+    .split(" ")
+    .filter(Boolean)
+    .slice(0, 2)
+    .map((part) => part.charAt(0).toUpperCase())
+    .join("") || "R";
+}
+
+function formatTime(value) {
+  const date = new Date(value);
+  return date.toLocaleString("es-PE", {
+    day: "2-digit",
+    month: "short",
+    hour: "2-digit",
+    minute: "2-digit"
+  });
 }
 
 function showToast(text) {
