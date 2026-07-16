@@ -133,16 +133,34 @@
         </form>
       </div>
 
-      <div class="success-card" id="successCard" hidden>
-        <span class="success-icon" aria-hidden="true">
-          <svg viewBox="0 0 24 24">
-            <path d="M20 6L9 17l-5-5"></path>
-          </svg>
-        </span>
-        <p class="eyebrow dark">Usuario creado</p>
-        <h2 id="successTitle">Cuenta lista</h2>
-        <p id="successText">Tu usuario fue registrado correctamente.</p>
-        <button class="submit" type="button" id="logoutButton">Volver al registro</button>
+      <div class="success-card social-app" id="successCard" hidden>
+        <header class="social-topbar">
+          <div>
+            <p class="eyebrow dark">Usuario creado</p>
+            <h2 id="successTitle">Cuenta lista</h2>
+            <p id="successText">Ya puedes publicar, reaccionar y comentar en tu muro.</p>
+          </div>
+          <button class="logout-chip" type="button" id="logoutButton">Salir</button>
+        </header>
+
+        <section class="composer" aria-label="Crear publicacion">
+          <div class="avatar" id="profileAvatar" aria-hidden="true">R</div>
+          <form class="post-form" id="postForm">
+            <textarea id="postText" rows="3" maxlength="280" placeholder="Que estas pensando?"></textarea>
+            <div class="composer-actions">
+              <span id="postCounter">0/280</span>
+              <button class="submit small-submit" type="submit">Publicar</button>
+            </div>
+          </form>
+        </section>
+
+        <section class="quick-actions" aria-label="Acciones rapidas">
+          <button type="button" data-prompt="Hoy estoy trabajando en algo increible.">Estado</button>
+          <button type="button" data-prompt="Comparto una foto retro con toda la energia.">Foto</button>
+          <button type="button" data-prompt="Que musica recomiendan para programar hoy?">Pregunta</button>
+        </section>
+
+        <section class="feed" id="feed" aria-label="Publicaciones"></section>
       </div>
     </section>
   </main>
