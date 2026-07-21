@@ -3,89 +3,103 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>RetroData Anonimo</title>
+  <title>RetroData Comunidad</title>
   <link rel="stylesheet" href="home.css">
   <script defer src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
   <script defer src="supabase-config.js?v=2"></script>
   <script defer src="home.js"></script>
 </head>
 <body>
+  <header class="topbar">
+    <div class="topbar-start">
+      <a class="app-logo" href="home.html" aria-label="RetroData">R</a>
+      <label class="search-box" aria-label="Buscar publicaciones">
+        <span aria-hidden="true">⌕</span>
+        <input id="searchInput" type="search" placeholder="Buscar en RetroData">
+      </label>
+    </div>
+    <nav class="top-nav" aria-label="Navegación principal">
+      <button class="is-active" type="button" title="Inicio" data-nav="inicio">⌂<span>Inicio</span></button>
+      <button type="button" title="Videos" data-nav="videos">▶<span>Videos</span></button>
+      <button type="button" title="Comunidades" data-nav="comunidades">♧<span>Grupos</span></button>
+    </nav>
+    <div class="topbar-actions">
+      <button id="topPostButton" type="button" title="Crear publicación">＋</button>
+      <button type="button" title="Mensajes" data-nav="mensajes">✉</button>
+      <button type="button" title="Notificaciones" data-nav="notificaciones">●</button>
+      <button class="mini-avatar" type="button" title="Perfil anónimo" data-nav="perfil">?</button>
+    </div>
+  </header>
+
   <main class="app-shell">
-    <aside class="left-nav" aria-label="Navegacion">
-      <a class="app-logo" href="home.html" aria-label="Inicio">R</a>
+    <aside class="left-nav" aria-label="Accesos directos">
       <nav>
-        <button class="is-active" type="button"><span>H</span>Inicio</button>
-        <button type="button"><span>B</span>Buscar</button>
-        <button type="button"><span>N</span>Notificaciones</button>
-        <button type="button"><span>M</span>Mensajes</button>
-        <button type="button"><span>G</span>Guardados</button>
-        <button type="button"><span>P</span>Perfil anonimo</button>
+        <button class="profile-link" type="button" data-nav="perfil"><span class="nav-avatar">?</span>Perfil anónimo</button>
+        <button class="is-active" type="button" data-nav="inicio"><span>⌂</span>Inicio</button>
+        <button type="button" data-nav="comunidades"><span>♧</span>Comunidades</button>
+        <button type="button" data-nav="eventos"><span>▦</span>Eventos</button>
+        <button type="button" data-nav="guardados"><span>▣</span>Guardados</button>
+        <button type="button" data-nav="videos"><span>▶</span>Videos</button>
       </nav>
-      <button class="primary-post" id="sidePostButton" type="button">Publicar</button>
-      <button class="logout-button" id="logoutButton" type="button">Cerrar sesion</button>
+      <div class="left-divider"></div>
+      <h2>Tus accesos directos</h2>
+      <button class="shortcut" type="button" data-search="universidad"><span>U</span>Universidad</button>
+      <button class="shortcut" type="button" data-search="opinion"><span>O</span>Opiniones</button>
+      <button class="logout-button" id="logoutButton" type="button">Cerrar sesión</button>
     </aside>
 
-    <section class="timeline" aria-label="Timeline anonimo">
-      <header class="timeline-header">
-        <div>
-          <h1>Inicio</h1>
-          <p>Publicaciones y comentarios anonimos</p>
-        </div>
-        <label class="search-box" aria-label="Buscar publicaciones">
-          <span>#</span>
-          <input id="searchInput" type="search" placeholder="Buscar temas">
-        </label>
-      </header>
+    <section class="timeline" aria-label="Publicaciones de la comunidad">
+      <section class="stories" aria-label="Temas rápidos">
+        <button class="story create-story" id="sidePostButton" type="button">
+          <span class="story-art">＋</span><strong>Crear historia</strong>
+        </button>
+        <button class="story story-one" type="button" data-search="pregunta"><span>P</span><strong>Preguntas</strong></button>
+        <button class="story story-two" type="button" data-search="opinion"><span>O</span><strong>Opiniones</strong></button>
+        <button class="story story-three" type="button" data-search="confesion"><span>C</span><strong>Confesiones</strong></button>
+      </section>
 
-      <section class="composer" aria-label="Crear publicacion anonima">
-        <div class="anon-avatar" aria-hidden="true">?</div>
+      <section class="composer card" aria-label="Crear publicación anónima">
+        <div class="composer-main">
+          <div class="anon-avatar" aria-hidden="true">?</div>
+          <button class="composer-prompt" id="composerPrompt" type="button">¿Qué estás pensando? Publica de forma anónima</button>
+        </div>
         <form id="postForm">
-          <textarea id="postText" maxlength="280" rows="4" placeholder="Que esta pasando? Publica sin mostrar tu nombre."></textarea>
+          <textarea id="postText" maxlength="280" rows="3" placeholder="Escribe algo para compartir con la comunidad..."></textarea>
           <div class="composer-footer">
-            <div class="composer-tools" aria-label="Opciones">
-              <button type="button" data-template="Opinion anonima: ">Opinion</button>
-              <button type="button" data-template="Pregunta anonima: ">Pregunta</button>
-              <button type="button" data-template="Confesion anonima: ">Confesion</button>
+            <div class="composer-tools" aria-label="Tipos de publicación">
+              <button type="button" data-template="Opinion anonima: "><span class="green">▣</span> Foto/video</button>
+              <button type="button" data-template="Pregunta anonima: "><span class="red">●</span> Pregunta</button>
+              <button type="button" data-template="Confesion anonima: "><span class="yellow">☺</span> Estado</button>
             </div>
-            <div class="post-submit">
-              <span id="postCounter">0/280</span>
-              <button type="submit">Publicar</button>
-            </div>
+            <div class="post-submit"><span id="postCounter">0/280</span><button type="submit">Publicar</button></div>
           </div>
         </form>
       </section>
 
+      <div class="feed-heading"><h1>Publicaciones recientes</h1><button type="button">Filtros</button></div>
       <section class="feed" id="feed" aria-label="Publicaciones"></section>
     </section>
 
-    <aside class="right-panel" aria-label="Informacion">
-      <section class="panel-card">
-        <h2>Que esta pasando</h2>
-        <button type="button" data-search="anonimo">
-          <span>Tendencia</span>
-          <strong>#Anonimo</strong>
-          <small>128 publicaciones</small>
-        </button>
-        <button type="button" data-search="universidad">
-          <span>Comunidad</span>
-          <strong>#Universidad</strong>
-          <small>82 publicaciones</small>
-        </button>
-        <button type="button" data-search="opinion">
-          <span>Debate</span>
-          <strong>#Opinion</strong>
-          <small>55 publicaciones</small>
-        </button>
+    <aside class="right-panel" aria-label="Información y contactos">
+      <section class="panel-card sponsored">
+        <h2>Destacado</h2>
+        <div class="promo-art">RETRO<br>DATA</div>
+        <div><strong>Comparte sin revelar tu identidad</strong><p>Una comunidad para hablar libremente y con respeto.</p></div>
       </section>
-
-      <section class="panel-card">
-        <h2>Modo anonimo</h2>
-        <p>Tu nombre no aparece en los posts ni en los comentarios. Todo se muestra como Anonimo.</p>
+      <section class="panel-card trends">
+        <h2>Temas populares</h2>
+        <button type="button" data-search="anonimo"><span>#</span><div><strong>Anonimo</strong><small>128 publicaciones</small></div></button>
+        <button type="button" data-search="universidad"><span>#</span><div><strong>Universidad</strong><small>82 publicaciones</small></div></button>
+        <button type="button" data-search="opinion"><span>#</span><div><strong>Opinion</strong><small>55 publicaciones</small></div></button>
+      </section>
+      <section class="panel-card contacts">
+        <div class="panel-title"><h2>Contactos</h2><span>⌕ ···</span></div>
+        <p><i></i> Comunidad Retro</p><p><i></i> Debate abierto</p><p><i></i> Ayuda y soporte</p>
       </section>
     </aside>
   </main>
 
-  <button class="floating-post" id="floatingPostButton" type="button" aria-label="Crear publicacion">+</button>
+  <button class="floating-post" id="floatingPostButton" type="button" aria-label="Crear publicación">＋</button>
   <div class="toast" id="toast" role="status" aria-live="polite"></div>
 </body>
 </html>
