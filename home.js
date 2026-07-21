@@ -9,6 +9,10 @@ const floatingPostButton = document.querySelector("#floatingPostButton");
 const templateButtons = document.querySelectorAll("[data-template]");
 const trendButtons = document.querySelectorAll("[data-search]");
 const toast = document.querySelector("#toast");
+const composer = document.querySelector(".composer");
+const composerPrompt = document.querySelector("#composerPrompt");
+const topPostButton = document.querySelector("#topPostButton");
+const navigationButtons = document.querySelectorAll("[data-nav]");
 
 const config = window.supabaseConfig || {};
 const supabaseKey = config.publishableKey || config.anonKey || "";
@@ -32,6 +36,12 @@ postForm.addEventListener("submit", async (event) => {
 
 sidePostButton.addEventListener("click", focusComposer);
 floatingPostButton.addEventListener("click", focusComposer);
+topPostButton.addEventListener("click", focusComposer);
+composerPrompt.addEventListener("click", focusComposer);
+
+navigationButtons.forEach((button) => {
+  button.addEventListener("click", () => handleNavigation(button.dataset.nav));
+});
 
 templateButtons.forEach((button) => {
   button.addEventListener("click", () => {
@@ -69,7 +79,7 @@ feed.addEventListener("click", async (event) => {
   }
 
   if (button.dataset.action === "share") {
-    showToast("Enlace anonimo listo para compartir.");
+    await sharePost(post.dataset.postId);
   }
 });
 
@@ -96,6 +106,19 @@ logoutButton.addEventListener("click", async () => {
 async function init() {
   updateCounter();
 
+  const localUser = localStorage.getItem("retrodataCurrentUser");
+  let hasSession = Boolean(localUser);
+
+  if (supabaseClient) {
+    const { data } = await supabaseClient.auth.getSession();
+    hasSession = hasSession || Boolean(data.session);
+  }
+
+  if (!hasSession) {
+    window.location.replace("index.html");
+    return;
+  }
+
   if (!supabaseClient) {
     usingSupabase = false;
     posts = loadLocalPosts();
@@ -109,8 +132,64 @@ async function init() {
 }
 
 function focusComposer() {
+  composer.classList.add("is-open");
   postText.focus();
   postText.scrollIntoView({ behavior: "smooth", block: "center" });
+}
+
+async function sharePost(postId) {
+  const post = posts.find((item) => String(item.id) === String(postId));
+  if (!post) return;
+
+  const facebookUrl = `https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(window.location.href)}`;
+  window.open(facebookUrl, "facebook-share", "width=720,height=620,noopener,noreferrer");
+
+  try {
+    if (navigator.clipboard) {
+      await navigator.clipboard.writeText(post.content);
+    }
+    showToast("Texto copiado. Pégalo en la ventana de Facebook.");
+  } catch (error) {
+    showToast("Se abrió Facebook para compartir el enlace.");
+  }
+}
+
+function handleNavigation(section) {
+  document.querySelectorAll("[data-nav]").forEach((button) => {
+    button.classList.toggle("is-active", button.dataset.nav === section);
+  });
+
+  if (section === "inicio") {
+    searchInput.value = "";
+    renderFeed();
+    window.scrollTo({ top: 0, behavior: "smooth" });
+    return;
+  }
+
+  if (section === "comunidades") {
+    searchInput.value = "comunidad";
+    renderFeed("comunidad");
+    showToast("Mostrando publicaciones de comunidades.");
+    return;
+  }
+
+  if (section === "guardados") {
+    showToast("Guardados estará disponible cuando guardes una publicación.");
+    return;
+  }
+
+  if (section === "perfil") {
+    showToast("Estás publicando con un perfil anónimo.");
+    return;
+  }
+
+  const labels = {
+    videos: "Videos",
+    eventos: "Eventos",
+    mensajes: "Mensajes",
+    notificaciones: "Notificaciones"
+  };
+  showToast(`${labels[section]}: todavía no hay contenido nuevo.`);
 }
 
 async function createPost(text) {
